@@ -14,12 +14,20 @@ import { Fonts } from '@/constants/fonts';
 import { Header } from '@/components/ui/Header';
 import { CartoonCard } from '@/components/ui/CartoonCard';
 import { useGameStore } from '@/store/useGameStore';
-import { shopItems } from '@/data/shop-items';
+import { shopItems, offers } from '@/data/shop-items';
 
 const { width } = Dimensions.get('window');
 
 export default function ShopScreen() {
-  const { addCoins, addGems, spendGems, refillEnergy } = useGameStore();
+  const { addCoins, addGems, spendGems, spendCoins, refillEnergy } = useGameStore();
+
+  const handleOfferPurchase = (offer: typeof offers[number]) => {
+    const spend = offer.currency === 'gems' ? spendGems : spendCoins;
+    if (spend(offer.price)) {
+      if (offer.id === 'super_pass') addGems(200);
+      if (offer.id === 'chest_pack') { addGems(100); addCoins(5000); }
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -31,57 +39,59 @@ export default function ShopScreen() {
         {/* Offers */}
         <Animated.View entering={FadeIn.duration(200)}>
           <Text style={styles.sectionTitle}>OFFERS</Text>
-          <CartoonCard color="#1E3A6E" borderColor="#FFD700" style={styles.offerCard}>
-            <View style={styles.offerBadge}>
-              <Text style={styles.offerBadgeText}>x15{'\n'}Value</Text>
-            </View>
-            <View style={styles.offerContent}>
-              <MaterialCommunityIcons name="crown" size={40} color="#FFD700" />
-              <View style={styles.offerInfo}>
-                <Text style={styles.offerTitle}>SUPER PASS</Text>
-                <Text style={styles.offerDesc}>Unlock Season Exclusive Reward!</Text>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => handleOfferPurchase(offers[0])}>
+            <CartoonCard color="#1E3A6E" borderColor="#FFD700" style={styles.offerCard}>
+              <View style={styles.offerBadge}>
+                <Text style={styles.offerBadgeText}>x15{'\n'}Value</Text>
               </View>
-              <View>
-                <Text style={styles.offerTime}>
-                  <MaterialCommunityIcons name="clock-outline" size={10} color="#8E8EA0" /> 14d 23h
-                </Text>
-                <View style={styles.offerPriceBtn}>
-                  <Text style={styles.offerPrice}>$4.99</Text>
+              <View style={styles.offerContent}>
+                <MaterialCommunityIcons name="crown" size={40} color="#FFD700" />
+                <View style={styles.offerInfo}>
+                  <Text style={styles.offerTitle}>SUPER PASS</Text>
+                  <Text style={styles.offerDesc}>Unlock Season Exclusive Reward!</Text>
+                </View>
+                <View>
+                  <Text style={styles.offerTime}>
+                    <MaterialCommunityIcons name="clock-outline" size={10} color="#8E8EA0" /> 14d 23h
+                  </Text>
+                  <View style={styles.offerPriceBtn}>
+                    <MaterialCommunityIcons name="diamond-stone" size={14} color="#C77DFF" />
+                    <Text style={styles.offerPrice}>{offers[0].price}</Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          </CartoonCard>
+            </CartoonCard>
+          </TouchableOpacity>
         </Animated.View>
 
         {/* Chest Pack */}
         <Animated.View entering={FadeIn.delay(100).duration(200)}>
-          <CartoonCard color="#1E2E6E" borderColor="#4A90E2" style={styles.chestCard}>
-            <View style={styles.chestHeader}>
-              <View style={styles.bestBadge}><Text style={styles.bestBadgeText}>BEST</Text></View>
-              <Text style={styles.chestTitle}>Special Chest Pack</Text>
-              <Text style={styles.chestTime}>
-                <MaterialCommunityIcons name="clock-outline" size={10} color="#8E8EA0" /> 3d 23h
-              </Text>
-            </View>
-            <View style={styles.chestItems}>
-              {[
-                { icon: 'gift', qty: 7 },
-                { icon: 'diamond-stone', qty: 5 },
-                { icon: 'crown', qty: 3 },
-                { icon: 'trophy', qty: 5 },
-                { icon: 'star', qty: 7 },
-              ].map((item, i) => (
-                <View key={i} style={styles.chestItem}>
-                  <MaterialCommunityIcons name={item.icon as any} size={28} color="#FFD700" />
-                  <Text style={styles.chestItemCount}>x{item.qty}</Text>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => handleOfferPurchase(offers[1])}>
+            <CartoonCard color="#1E2E6E" borderColor="#4A90E2" style={styles.chestCard}>
+              <View style={styles.chestHeader}>
+                <View style={styles.bestBadge}><Text style={styles.bestBadgeText}>BEST</Text></View>
+                <Text style={styles.chestTitle}>Special Chest Pack</Text>
+                <Text style={styles.chestTime}>
+                  <MaterialCommunityIcons name="clock-outline" size={10} color="#8E8EA0" /> 3d 23h
+                </Text>
+              </View>
+              <View style={styles.chestItems}>
+                {offers[1].items.map((item, i) => (
+                  <View key={i} style={styles.chestItem}>
+                    <MaterialCommunityIcons name={item.icon as any} size={28} color="#FFD700" />
+                    <Text style={styles.chestItemCount}>x{item.quantity}</Text>
+                  </View>
+                ))}
+              </View>
+              <View style={styles.chestFooter}>
+                <View style={styles.limitedBadge}><Text style={styles.limitedText}>LIMITED</Text></View>
+                <View style={styles.chestPriceBtn}>
+                  <MaterialCommunityIcons name="diamond-stone" size={14} color="#C77DFF" />
+                  <Text style={styles.chestPrice}>{offers[1].price}</Text>
                 </View>
-              ))}
-            </View>
-            <View style={styles.chestFooter}>
-              <View style={styles.limitedBadge}><Text style={styles.limitedText}>LIMITED</Text></View>
-              <View style={styles.chestPriceBtn}><Text style={styles.chestPrice}>$19.99</Text></View>
-            </View>
-          </CartoonCard>
+              </View>
+            </CartoonCard>
+          </TouchableOpacity>
         </Animated.View>
 
         {/* Daily Deals */}
@@ -93,14 +103,22 @@ export default function ShopScreen() {
             </Text>
           </View>
           <View style={styles.dealsGrid}>
-            {shopItems.slice(0, 6).map((item) => (
+            {shopItems.slice(0, 6).map((item, index) => (
               <TouchableOpacity
                 key={item.id}
-                style={[styles.dealCard, item.isFree && styles.dealCardFree]}
+                style={[
+                  styles.dealCard,
+                  item.isFree && styles.dealCardFree,
+                  index === 0 && { borderTopLeftRadius: 16 },
+                  index === 2 && { borderTopRightRadius: 16 },
+                  index === 3 && { borderBottomLeftRadius: 16 },
+                  index === 5 && { borderBottomRightRadius: 16 },
+                ]}
                 activeOpacity={0.8}
                 onPress={() => {
-                  if (item.isFree) { /* claim free item */ }
-                  else if (item.currency === 'gems') spendGems(item.price);
+                  if (item.isFree) { addCoins(50); }
+                  else if (item.currency === 'gems') { if (spendGems(item.price)) addCoins(item.category === 'currency' ? item.quantity : 0); }
+                  else if (item.currency === 'coins') { spendCoins(item.price); }
                 }}
               >
                 <Text style={styles.dealQuantity}>x{item.quantity}</Text>
@@ -123,7 +141,7 @@ export default function ShopScreen() {
         <Animated.View entering={FadeIn.delay(300).duration(200)}>
           <Text style={styles.sectionTitle}>RESOURCES</Text>
           <View style={styles.resourceGrid}>
-            <TouchableOpacity style={styles.resourceCard} onPress={() => addCoins(500)}>
+            <TouchableOpacity style={styles.resourceCard} onPress={() => { if (spendGems(10)) addCoins(500); }}>
               <Image source={GameAssets.money} style={{ width: 32, height: 32 }} />
               <Text style={styles.resourceName}>500 Coins</Text>
               <View style={styles.resourcePrice}>
@@ -131,7 +149,7 @@ export default function ShopScreen() {
                 <Text style={styles.resourcePriceText}>10</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.resourceCard} onPress={() => addCoins(2000)}>
+            <TouchableOpacity style={styles.resourceCard} onPress={() => { if (spendGems(30)) addCoins(2000); }}>
               <Image source={GameAssets.money} style={{ width: 32, height: 32 }} />
               <Text style={styles.resourceName}>2000 Coins</Text>
               <View style={styles.resourcePrice}>
@@ -139,12 +157,12 @@ export default function ShopScreen() {
                 <Text style={styles.resourcePriceText}>30</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.resourceCard} onPress={() => refillEnergy(5)}>
+            <TouchableOpacity style={styles.resourceCard} onPress={() => { if (spendCoins(50)) refillEnergy(5); }}>
               <Image source={GameAssets.energy} style={{ width: 32, height: 32 }} />
               <Text style={styles.resourceName}>5 Energy</Text>
-              <View style={styles.adBadge}>
-                <MaterialCommunityIcons name="play-box" size={12} color="#fff" />
-                <Text style={styles.adText}>Watch Ad</Text>
+              <View style={styles.resourcePrice}>
+                <Image source={GameAssets.money} style={{ width: 14, height: 14 }} />
+                <Text style={styles.resourcePriceText}>50</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -170,7 +188,7 @@ const styles = StyleSheet.create({
   offerTitle: { color: '#fff', fontSize: 18, fontFamily: Fonts.display },
   offerDesc: { color: Colors.textGray, fontSize: 12 },
   offerTime: { color: Colors.textGray, fontSize: 10, marginBottom: 4 },
-  offerPriceBtn: { backgroundColor: Colors.accentGreen, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 8 },
+  offerPriceBtn: { backgroundColor: Colors.accentGreen, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', gap: 4 },
   offerPrice: { color: '#fff', fontSize: 16, fontFamily: Fonts.display },
   chestCard: { marginBottom: 16, padding: 14 },
   chestHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
@@ -184,12 +202,12 @@ const styles = StyleSheet.create({
   chestFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   limitedBadge: { backgroundColor: Colors.accentOrange, borderRadius: 6, paddingHorizontal: 10, paddingVertical: 4 },
   limitedText: { color: '#fff', fontSize: 11, fontWeight: '900', letterSpacing: 1 },
-  chestPriceBtn: { backgroundColor: Colors.accentGreen, borderRadius: 12, paddingHorizontal: 18, paddingVertical: 8 },
+  chestPriceBtn: { backgroundColor: Colors.accentGreen, borderRadius: 12, paddingHorizontal: 18, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', gap: 4 },
   chestPrice: { color: '#fff', fontSize: 16, fontFamily: Fonts.display },
   dailyDealsHeader: { alignItems: 'center', marginBottom: 4 },
   timerText: { color: Colors.textGray, fontSize: 13, fontWeight: '700', marginBottom: 8 },
-  dealsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, justifyContent: 'space-between' },
-  dealCard: { width: (width - 52) / 3, backgroundColor: '#E0F0FF', borderRadius: 18, padding: 12, alignItems: 'center', borderWidth: 2.5, borderColor: '#B0D0F0', shadowColor: '#000', shadowOffset: { width: 0, height: 5 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 6 },
+  dealsGrid: { flexDirection: 'row', flexWrap: 'wrap', borderRadius: 16, overflow: 'hidden' },
+  dealCard: { width: (width - Layout.spacing.md * 2) / 3, backgroundColor: '#E0F0FF', padding: 12, alignItems: 'center', borderWidth: 1, borderColor: '#B0D0F0' },
   dealCardFree: { backgroundColor: '#D0FFD0', borderColor: Colors.accentGreen },
   dealQuantity: { position: 'absolute', top: 6, right: 8, fontSize: 13, fontFamily: Fonts.display, color: Colors.textDark },
   dealName: { color: Colors.textDark, fontSize: 11, fontFamily: Fonts.display, textAlign: 'center', marginTop: 4, marginBottom: 6 },

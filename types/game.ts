@@ -198,7 +198,8 @@ export interface Offer {
   id: string;
   name: string;
   description: string;
-  price: string;
+  price: number;
+  currency: 'coins' | 'gems';
   icon: string;
   badge?: string;
   timeLeft: string;

@@ -38,8 +38,6 @@ export default function SettingsScreen() {
         <Text style={styles.sectionTitle}>ACCOUNT</Text>
         <CartoonCard color="#2A2D6E" borderColor="#3A3D8E" style={styles.settingsCard}>
           <SettingButton icon="cloud-upload" label="Save Progress" />
-          <View style={styles.separator} />
-          <SettingButton icon="cloud-download" label="Restore Purchase" />
         </CartoonCard>
 
         {/* About */}

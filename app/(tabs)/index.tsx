@@ -33,20 +33,31 @@ import { useGameStore } from '@/store/useGameStore';
 
 const { width, height } = Dimensions.get('window');
 
-// Calendar data — weekly match schedule
-const MATCH_DAYS = [
-  { day: 'MON', label: 'Friendly', icon: 'cricket', color: '#4A90E2', reward: 50, done: true },
-  { day: 'TUE', label: 'League', icon: 'trophy', color: '#FFD700', reward: 100, done: true },
-  { day: 'WED', label: 'Cup', icon: 'stadium-variant', color: '#4CD964', reward: 150, done: true },
-  { day: 'THU', label: 'Rivals', icon: 'sword-cross', color: '#FF8C42', reward: 120, done: false, isToday: true },
-  { day: 'FRI', label: 'League', icon: 'trophy', color: '#FFD700', reward: 100, done: false },
-  { day: 'SAT', label: 'Derby', icon: 'fire', color: '#FF3B54', reward: 200, done: false },
-  { day: 'SUN', label: 'Finals', icon: 'crown', color: '#9B59B6', reward: 300, done: false },
+const MATCH_SCHEDULE = [
+  { day: 'MON', label: 'Friendly', icon: 'cricket', color: '#4A90E2', reward: 50 },
+  { day: 'TUE', label: 'League', icon: 'trophy', color: '#FFD700', reward: 100 },
+  { day: 'WED', label: 'Cup', icon: 'stadium-variant', color: '#4CD964', reward: 150 },
+  { day: 'THU', label: 'Rivals', icon: 'sword-cross', color: '#FF8C42', reward: 120 },
+  { day: 'FRI', label: 'League', icon: 'trophy', color: '#FFD700', reward: 100 },
+  { day: 'SAT', label: 'Derby', icon: 'fire', color: '#FF3B54', reward: 200 },
+  { day: 'SUN', label: 'Finals', icon: 'crown', color: '#9B59B6', reward: 300 },
 ];
+
+function getMatchDays() {
+  const todayIdx = (new Date().getDay() + 6) % 7; // 0=Mon, 6=Sun
+  return MATCH_SCHEDULE.map((m, i) => ({
+    ...m,
+    done: false,
+    isToday: i === todayIdx,
+  }));
+}
+
+const MATCH_DAYS = getMatchDays();
 
 export default function HomeScreen() {
   const [showDailyReward, setShowDailyReward] = useState(false);
-  const [selectedCalDay, setSelectedCalDay] = useState(3); // thursday = today
+  const todayIdx = MATCH_DAYS.findIndex((d) => d.isToday);
+  const [selectedCalDay, setSelectedCalDay] = useState(todayIdx >= 0 ? todayIdx : 0);
   const { bestScore, level, totalGamesPlayed, energy, coins, medkits } = useGameStore();
 
   const floatY = useSharedValue(0);

@@ -80,15 +80,7 @@ export function DailyRewardModal({ visible, onClose }: DailyRewardModalProps) {
           </View>
 
           <View style={styles.buttons}>
-            <CartoonButton title="GET" onPress={handleClaim} color={Colors.btnGreen} size="medium" />
-            <CartoonButton
-              title="DOUBLE"
-              onPress={handleClaim}
-              color={Colors.btnYellow}
-              textColor={Colors.textDark}
-              icon="play-box"
-              size="medium"
-            />
+            <CartoonButton title="CLAIM" onPress={handleClaim} color={Colors.btnGreen} size="medium" />
           </View>
 
           <Text style={styles.reminderText}>

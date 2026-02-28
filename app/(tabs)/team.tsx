@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
 
   // Hero grid
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, justifyContent: 'center' },
-  charCard: { width: (width - 56) / 2, alignItems: 'center', padding: 16 },
+  charCard: { width: (width - 56) / 2, height: 120, alignItems: 'center', justifyContent: 'center', padding: 16 },
   charName: { color: Colors.textWhite, fontSize: 13, fontFamily: Fonts.display, marginTop: 8, textAlign: 'center' },
   lockOverlay: {
     position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
@@ -417,7 +417,7 @@ const styles = StyleSheet.create({
     marginBottom: 10, letterSpacing: 1,
   },
   horizRow: { flexDirection: 'row', gap: 10, paddingRight: 16 },
-  gearCard: { width: 110, alignItems: 'center', padding: 14 },
+  gearCard: { width: 110, height: 110, alignItems: 'center', justifyContent: 'center', padding: 14 },
   gearName: { color: Colors.textWhite, fontSize: 11, fontFamily: Fonts.display, marginTop: 6, textAlign: 'center' },
   gearStat: { color: Colors.accentGreen, fontSize: 10, fontFamily: Fonts.display, marginTop: 2 },
   lockSmall: {
@@ -429,7 +429,7 @@ const styles = StyleSheet.create({
 
   // Boosters
   boosterGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  boosterCard: { width: (width - 52) / 2, padding: 14 },
+  boosterCard: { width: (width - 52) / 2, height: 150, padding: 14 },
   boosterHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 6 },
   activeDot: {
     width: 10, height: 10, borderRadius: 5,
