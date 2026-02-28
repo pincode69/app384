@@ -1,4 +1,4 @@
-package com.jeetbzapp
+package com.jeetbzapp.app
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

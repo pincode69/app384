@@ -1,4 +1,4 @@
-package com.jeetbzapp
+package com.jeetbzapp.app
 
 import android.app.Application
 import android.content.res.Configuration
