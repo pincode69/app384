@@ -14,7 +14,7 @@ definitions:
       XCODE_SCHEME: "app_rd_13_p_1"
       APP_STORE_APP_ID: 6757937669
       BUILD_ENV: production
-    node: 18
+    node: 24
     xcode: latest
     cocoapods: default
 
@@ -110,7 +110,7 @@ workflows:
         APP_FLAVOR: android-white
         BUILD_ENV: production
         PACKAGE_NAME: "com.jeetbzapp.app" # Example: com.your.app.package
-      node: 18
+      node: 24
       java: 17
     scripts:
       - *common_scripts
@@ -146,7 +146,7 @@ workflows:
         APP_FLAVOR: android-black
         BUILD_ENV: production
         PACKAGE_NAME: "com.jeetbzapp.app" # Example: com.your.app.package
-      node: 18
+      node: 24
       java: 17
     scripts:
       - *common_scripts
